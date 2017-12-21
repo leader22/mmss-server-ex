@@ -1,6 +1,6 @@
 defmodule MMSSServer do
   @moduledoc """
-  Documentation for MMSSServer.
+  TODO: Documentation for MMSSServer.
   """
 
   use Application
@@ -8,6 +8,7 @@ defmodule MMSSServer do
 
   def start(_type, _args) do
     env = Application.get_all_env(:mmss_server_ex)
+
     Logger.info("""
     Starting app on env...
       mpath:     #{env[:mpath]}
@@ -15,10 +16,17 @@ defmodule MMSSServer do
       user/pass: #{env[:user]}/#{env[:pass]}
     """)
 
-    children = [
-      Plug.Adapters.Cowboy.child_spec(:http, MMSSServer.Router, [env], port: env[:port])
-    ]
-    opts = [strategy: :one_for_one, name: MMSSServer.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(
+      [
+        Plug.Adapters.Cowboy.child_spec(
+          :http,
+          MMSSServer.Server,
+          [env],
+          port: env[:port]
+        )
+      ],
+      strategy: :one_for_one,
+      name: MMSSServer.Supervisor
+    )
   end
 end

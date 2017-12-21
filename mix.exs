@@ -24,6 +24,7 @@ defmodule MMSSServer.Mixfile do
     [
       {:cowboy, "~> 1.1.2"},
       {:plug, "~> 1.3.4"},
+      {:poison, "~> 3.1"},
       {:exsync, "~> 0.2", only: :dev},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
