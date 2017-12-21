@@ -15,7 +15,7 @@ defmodule MMSSServer.Mixfile do
   def application do
     [
       extra_applications: [:logger],
-      mod: {MMSSServer.Application, []}
+      mod: {MMSSServer, []}
     ]
   end
 
