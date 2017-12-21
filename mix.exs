@@ -5,7 +5,7 @@ defmodule MMSSServer.Mixfile do
     [
       app: :mmss_server_ex,
       version: "0.1.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.6.0-dev",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
