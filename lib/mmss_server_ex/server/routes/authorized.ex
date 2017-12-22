@@ -24,7 +24,7 @@ defmodule MMSSServer.Server.Routes.Authorized do
 
       true ->
         path = fetch_query_params(conn).params["path"]
-        mpath = Application.get_env(:mmss_server_ex, :mpath)
+        mpath = Env.fetch!(:mmss_server_ex, :mpath)
         Util.send_mp3(conn, 200, "#{mpath}/#{path}")
     end
   end
@@ -44,7 +44,7 @@ defmodule MMSSServer.Server.Routes.Authorized do
   @spec invalid_path?(Plug.Conn.t()) :: boolean
   defp invalid_path?(conn) do
     path = fetch_query_params(conn).params["path"]
-    mpath = Application.get_env(:mmss_server_ex, :mpath)
+    mpath = Env.fetch!(:mmss_server_ex, :mpath)
 
     case File.stat("#{mpath}/#{path}") do
       {:ok, _stat} -> false

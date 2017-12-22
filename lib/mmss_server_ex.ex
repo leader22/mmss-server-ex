@@ -9,13 +9,16 @@ defmodule MMSSServer do
   alias Plug.Adapters.Cowboy
 
   def start(_type, _args) do
-    env = Application.get_all_env(:mmss_server_ex)
+    mpath = Env.fetch!(:mmss_server_ex, :mpath)
+    port = Env.fetch!(:mmss_server_ex, :port)
+    user = Env.fetch!(:mmss_server_ex, :user)
+    pass = Env.fetch!(:mmss_server_ex, :pass)
 
     Logger.info("""
     Starting app on env...
-      mpath:     #{env[:mpath]}
-      port:      #{env[:port]}
-      user/pass: #{env[:user]}/#{env[:pass]}
+      mpath:     #{mpath}
+      port:      #{port}
+      user/pass: #{user}/#{pass}
     """)
 
     Supervisor.start_link(
@@ -23,8 +26,8 @@ defmodule MMSSServer do
         Cowboy.child_spec(
           :http,
           MMSSServer.Server,
-          [env],
-          port: env[:port]
+          [],
+          port: String.to_integer(port)
         )
       ],
       strategy: :one_for_one,

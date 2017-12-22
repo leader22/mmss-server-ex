@@ -45,8 +45,8 @@ defmodule MMSSServer.Server.Routes do
   defp invalid_cred?(conn) do
     env_cred =
       Util.sha256(
-        Application.get_env(:mmss_server_ex, :user),
-        Application.get_env(:mmss_server_ex, :pass)
+        Env.fetch!(:mmss_server_ex, :user),
+        Env.fetch!(:mmss_server_ex, :pass)
       )
 
     body_cred =
