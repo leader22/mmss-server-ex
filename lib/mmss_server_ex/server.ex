@@ -12,6 +12,12 @@ defmodule MMSSServer.Server do
     signing_salt: "mmss-server"
   )
 
+  plug(
+    Plug.Parsers,
+    parsers: [:urlencoded, :json],
+    json_decoder: Poison
+  )
+
   plug(:match)
   plug(:dispatch)
 
@@ -34,7 +40,7 @@ defmodule MMSSServer.Server do
   end
 
   match _ do
-    send_json(conn, 404, %{ error: 4 })
+    send_json(conn, 404, %{error: 4})
   end
 
   def send_json(conn, status, data) do
