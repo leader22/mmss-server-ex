@@ -1,8 +1,4 @@
 defmodule MMSSServer do
-  @moduledoc """
-  TODO: Documentation for MMSSServer.
-  """
-
   use Application
   require Logger
 

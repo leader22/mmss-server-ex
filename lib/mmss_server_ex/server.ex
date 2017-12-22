@@ -2,7 +2,7 @@ defmodule MMSSServer.Server do
   use Plug.Router
   import MMSSServer.Server.Plug, only: [put_secret_key_base: 2]
 
-  # TODO: could not verify session cookie
+  # XXX: could not verify session cookie
   plug(:put_secret_key_base)
 
   plug(
