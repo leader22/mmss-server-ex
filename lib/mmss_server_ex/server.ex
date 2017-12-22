@@ -61,6 +61,7 @@ defmodule MMSSServer.Server do
     Util.send_json(conn, 404, %{error: Error.err_route_not_found()})
   end
 
+  @spec login?(Plug.Conn.t()) :: boolean
   defp login?(conn) do
     nil !=
       conn

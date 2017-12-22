@@ -8,6 +8,7 @@ defmodule MMSSServer.Server.Routes do
   alias MMSSServer.Server.Error
   alias MMSSServer.Server.Util
 
+  @spec post_login(Plug.Conn.t()) :: Plug.Conn.t()
   def post_login(conn) do
     cond do
       invalid_params?(conn) ->
@@ -24,6 +25,7 @@ defmodule MMSSServer.Server.Routes do
     end
   end
 
+  @spec post_logout(Plug.Conn.t()) :: Plug.Conn.t()
   def post_logout(conn) do
     conn
     |> fetch_session()
@@ -31,6 +33,7 @@ defmodule MMSSServer.Server.Routes do
     |> Util.send_json(200, nil)
   end
 
+  @spec invalid_params?(Plug.Conn.t()) :: boolean
   defp invalid_params?(conn) do
     has_id = Map.has_key?(conn.body_params, "id")
     has_pw = Map.has_key?(conn.body_params, "pw")
@@ -38,6 +41,7 @@ defmodule MMSSServer.Server.Routes do
     (has_id and has_pw) == false
   end
 
+  @spec invalid_cred?(Plug.Conn.t()) :: boolean
   defp invalid_cred?(conn) do
     env_cred =
       Util.sha256(

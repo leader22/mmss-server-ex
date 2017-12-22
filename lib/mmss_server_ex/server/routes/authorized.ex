@@ -8,10 +8,12 @@ defmodule MMSSServer.Server.Routes.Authorized do
   alias MMSSServer.Server.Error
   alias MMSSServer.Server.Util
 
+  @spec get_session(Plug.Conn.t()) :: Plug.Conn.t()
   def get_session(conn) do
     Util.send_json(conn, 200, nil)
   end
 
+  @spec get_track(Plug.Conn.t()) :: Plug.Conn.t()
   def get_track(conn) do
     cond do
       invalid_params?(conn) ->
@@ -27,16 +29,19 @@ defmodule MMSSServer.Server.Routes.Authorized do
     end
   end
 
+  @spec unauthorized(Plug.Conn.t()) :: Plug.Conn.t()
   def unauthorized(conn) do
     Util.send_json(conn, 401, %{
       error: Error.err_authorization_required()
     })
   end
 
+  @spec invalid_params?(Plug.Conn.t()) :: boolean
   defp invalid_params?(conn) do
     Map.has_key?(conn.query_params, "path") == false
   end
 
+  @spec invalid_path?(Plug.Conn.t()) :: boolean
   defp invalid_path?(conn) do
     path = fetch_query_params(conn).params["path"]
     mpath = Application.get_env(:mmss_server_ex, :mpath)
