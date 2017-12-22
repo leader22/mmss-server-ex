@@ -1,6 +1,12 @@
 defmodule MMSSServer do
+  @moduledoc """
+  My Mp3 Streaming Server SERVER implementation.
+  """
+
   use Application
   require Logger
+
+  alias Plug.Adapters.Cowboy
 
   def start(_type, _args) do
     env = Application.get_all_env(:mmss_server_ex)
@@ -14,7 +20,7 @@ defmodule MMSSServer do
 
     Supervisor.start_link(
       [
-        Plug.Adapters.Cowboy.child_spec(
+        Cowboy.child_spec(
           :http,
           MMSSServer.Server,
           [env],

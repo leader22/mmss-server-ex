@@ -1,4 +1,8 @@
 defmodule MMSSServer.Server.Routes.Authorized do
+  @moduledoc """
+  Handlers for each route after login.
+  """
+
   import Plug.Conn
 
   alias MMSSServer.Server.Error
@@ -11,10 +15,10 @@ defmodule MMSSServer.Server.Routes.Authorized do
   def get_track(conn) do
     cond do
       invalid_params?(conn) ->
-        Util.send_json(conn, 400, %{error: Error.errInvalidParams()})
+        Util.send_json(conn, 400, %{error: Error.err_invalid_params()})
 
       invalid_path?(conn) ->
-        Util.send_json(conn, 400, %{error: Error.errInvalidParams()})
+        Util.send_json(conn, 400, %{error: Error.err_invalid_params()})
 
       true ->
         path = fetch_query_params(conn).params["path"]
@@ -25,7 +29,7 @@ defmodule MMSSServer.Server.Routes.Authorized do
 
   def unauthorized(conn) do
     Util.send_json(conn, 401, %{
-      error: Error.errAuthorizationRequired()
+      error: Error.err_authorization_required()
     })
   end
 

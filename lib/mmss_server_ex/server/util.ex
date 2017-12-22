@@ -1,4 +1,8 @@
 defmodule MMSSServer.Server.Util do
+  @moduledoc """
+  Utilitiy functions.
+  """
+
   import Plug.Conn
 
   def sha256(salt, pass) do

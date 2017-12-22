@@ -1,4 +1,8 @@
 defmodule MMSSServer.Server.Routes do
+  @moduledoc """
+  Handlers for each route before login.
+  """
+
   import Plug.Conn
 
   alias MMSSServer.Server.Error
@@ -7,10 +11,10 @@ defmodule MMSSServer.Server.Routes do
   def post_login(conn) do
     cond do
       invalid_params?(conn) ->
-        Util.send_json(conn, 400, %{error: Error.errInvalidParams()})
+        Util.send_json(conn, 400, %{error: Error.err_invalid_params()})
 
       invalid_cred?(conn) ->
-        Util.send_json(conn, 403, %{error: Error.errLoginFailure()})
+        Util.send_json(conn, 403, %{error: Error.err_login_failure()})
 
       true ->
         conn

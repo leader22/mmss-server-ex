@@ -1,9 +1,14 @@
 defmodule MMSSServer.Server do
+  @moduledoc """
+  Define and handle routes for our JSON API Server.
+  """
+
   use Plug.Router
 
   import MMSSServer.Server.Plug, only: [put_secret_key_base: 2]
 
   alias MMSSServer.Server.Routes
+  alias MMSSServer.Server.Routes.Authorized
   alias MMSSServer.Server.Error
   alias MMSSServer.Server.Util
 
@@ -38,22 +43,22 @@ defmodule MMSSServer.Server do
   # authorized routes
   get "/session" do
     if !login?(conn) do
-      Routes.Authorized.unauthorized(conn)
+      Authorized.unauthorized(conn)
     end
 
-    Routes.Authorized.get_session(conn)
+    Authorized.get_session(conn)
   end
 
   get "/track" do
     if !login?(conn) do
-      Routes.Authorized.unauthorized(conn)
+      Authorized.unauthorized(conn)
     end
 
-    Routes.Authorized.get_track(conn)
+    Authorized.get_track(conn)
   end
 
   match _ do
-    Util.send_json(conn, 404, %{error: Error.errRouteNotFound()})
+    Util.send_json(conn, 404, %{error: Error.err_route_not_found()})
   end
 
   defp login?(conn) do
