@@ -2,7 +2,7 @@ defmodule MMSSServer.Routes.Authorized do
   import Plug.Conn
 
   def getSession(conn) do
-    if isLogin(conn) == false do
+    if !isLogin?(conn) do
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(401, Poison.encode!(%{error: 3}))
@@ -18,7 +18,7 @@ defmodule MMSSServer.Routes.Authorized do
     path = conn.params["path"]
     IO.inspect(path)
 
-    if isLogin(conn) == false do
+    if !isLogin?(conn) do
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(401, Poison.encode!(%{error: 3}))
@@ -29,8 +29,9 @@ defmodule MMSSServer.Routes.Authorized do
     |> send_resp(200, Poison.encode!(nil))
   end
 
-  defp isLogin(_conn) do
-    # TODO: check session.cred
-    false
+  defp isLogin?(conn) do
+    conn
+    |> fetch_session()
+    |> get_session(:isLogin)
   end
 end
