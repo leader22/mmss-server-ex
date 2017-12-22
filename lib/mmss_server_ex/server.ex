@@ -1,6 +1,11 @@
 defmodule MMSSServer.Server do
   use Plug.Router
+
   import MMSSServer.Server.Plug, only: [put_secret_key_base: 2]
+
+  alias MMSSServer.Server.Routes
+  alias MMSSServer.Server.Error
+  alias MMSSServer.Server.Util
 
   # XXX: could not verify session cookie
   plug(:put_secret_key_base)
@@ -23,44 +28,32 @@ defmodule MMSSServer.Server do
 
   # routes
   post "/login" do
-    MMSSServer.Routes.post_login(conn)
+    Routes.post_login(conn)
   end
 
   post "/logout" do
-    MMSSServer.Routes.post_logout(conn)
+    Routes.post_logout(conn)
   end
 
   # authorized routes
   get "/session" do
     if !login?(conn) do
-      MMSSServer.Routes.Authorized.unauthorized(conn)
+      Routes.Authorized.unauthorized(conn)
     end
 
-    MMSSServer.Routes.Authorized.get_session(conn)
+    Routes.Authorized.get_session(conn)
   end
 
   get "/track" do
     if !login?(conn) do
-      MMSSServer.Routes.Authorized.unauthorized(conn)
+      Routes.Authorized.unauthorized(conn)
     end
 
-    MMSSServer.Routes.Authorized.get_track(conn)
+    Routes.Authorized.get_track(conn)
   end
 
   match _ do
-    send_json(conn, 404, %{error: MMSSServer.Server.Error.errRouteNotFound()})
-  end
-
-  def send_json(conn, status, data) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(status, Poison.encode!(data))
-  end
-
-  def send_mp3(conn, status, path) do
-    conn
-    |> put_resp_content_type("audio/mpeg")
-    |> send_file(status, path)
+    Util.send_json(conn, 404, %{error: Error.errRouteNotFound()})
   end
 
   defp login?(conn) do

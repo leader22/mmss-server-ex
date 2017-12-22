@@ -1,21 +1,22 @@
-defmodule MMSSServer.Routes do
+defmodule MMSSServer.Server.Routes do
   import Plug.Conn
+
+  alias MMSSServer.Server.Error
+  alias MMSSServer.Server.Util
 
   def post_login(conn) do
     cond do
       invalid_params?(conn) ->
-        MMSSServer.Server.send_json(conn, 400, %{
-          error: MMSSServer.Server.Error.errInvalidParams()
-        })
+        Util.send_json(conn, 400, %{error: Error.errInvalidParams()})
 
       invalid_cred?(conn) ->
-        MMSSServer.Server.send_json(conn, 403, %{error: MMSSServer.Server.Error.errLoginFailure()})
+        Util.send_json(conn, 403, %{error: Error.errLoginFailure()})
 
       true ->
         conn
         |> fetch_session()
         |> put_session(:isLogin, true)
-        |> MMSSServer.Server.send_json(200, nil)
+        |> Util.send_json(200, nil)
     end
   end
 
@@ -23,7 +24,7 @@ defmodule MMSSServer.Routes do
     conn
     |> fetch_session()
     |> delete_session(:isLogin)
-    |> MMSSServer.Server.send_json(200, nil)
+    |> Util.send_json(200, nil)
   end
 
   defp invalid_params?(conn) do
@@ -35,13 +36,13 @@ defmodule MMSSServer.Routes do
 
   defp invalid_cred?(conn) do
     env_cred =
-      MMSSServer.Server.Util.sha256(
+      Util.sha256(
         Application.get_env(:mmss_server_ex, :user),
         Application.get_env(:mmss_server_ex, :pass)
       )
 
     body_cred =
-      MMSSServer.Server.Util.sha256(
+      Util.sha256(
         conn.body_params["id"],
         conn.body_params["pw"]
       )
