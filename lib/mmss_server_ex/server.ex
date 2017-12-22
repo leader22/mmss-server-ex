@@ -48,7 +48,7 @@ defmodule MMSSServer.Server do
   end
 
   match _ do
-    send_json(conn, 404, %{error: 4})
+    send_json(conn, 404, %{error: MMSSServer.Server.Error.errRouteNotFound()})
   end
 
   def send_json(conn, status, data) do

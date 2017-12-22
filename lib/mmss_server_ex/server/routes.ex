@@ -4,10 +4,12 @@ defmodule MMSSServer.Routes do
   def post_login(conn) do
     cond do
       invalid_params?(conn) ->
-        MMSSServer.Server.send_json(conn, 400, %{error: 1})
+        MMSSServer.Server.send_json(conn, 400, %{
+          error: MMSSServer.Server.Error.errInvalidParams()
+        })
 
       invalid_cred?(conn) ->
-        MMSSServer.Server.send_json(conn, 403, %{error: 2})
+        MMSSServer.Server.send_json(conn, 403, %{error: MMSSServer.Server.Error.errLoginFailure()})
 
       true ->
         conn
