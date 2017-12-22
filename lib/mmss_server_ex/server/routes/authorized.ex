@@ -2,29 +2,18 @@ defmodule MMSSServer.Routes.Authorized do
   import Plug.Conn
 
   def get_session(conn) do
-    if !login?(conn) do
-      MMSSServer.Server.send_json(conn, 401, %{error: 3})
-    end
-
     MMSSServer.Server.send_json(conn, 200, nil)
   end
 
   def get_track(conn) do
-    if !login?(conn) do
-      MMSSServer.Server.send_json(conn, 401, %{error: 3})
-    end
-
     conn = fetch_query_params(conn)
     path = conn.params["path"]
-    IO.inspect(path)
+    mpath = Application.get_env(:mmss_server_ex, :mpath)
 
-    MMSSServer.Server.send_json(conn, 200, nil)
+    MMSSServer.Server.send_mp3(conn, 200, "#{mpath}/#{path}")
   end
 
-  defp login?(conn) do
-    nil !=
-      conn
-      |> fetch_session()
-      |> get_session(:isLogin)
+  def unauthorized(conn) do
+    MMSSServer.Server.send_json(conn, 401, %{error: 3})
   end
 end

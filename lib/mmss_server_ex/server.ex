@@ -32,10 +32,18 @@ defmodule MMSSServer.Server do
 
   # authorized routes
   get "/session" do
+    if !login?(conn) do
+      MMSSServer.Routes.Authorized.unauthorized(conn)
+    end
+
     MMSSServer.Routes.Authorized.get_session(conn)
   end
 
   get "/track" do
+    if !login?(conn) do
+      MMSSServer.Routes.Authorized.unauthorized(conn)
+    end
+
     MMSSServer.Routes.Authorized.get_track(conn)
   end
 
@@ -47,5 +55,18 @@ defmodule MMSSServer.Server do
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(status, Poison.encode!(data))
+  end
+
+  def send_mp3(conn, status, path) do
+    conn
+    |> put_resp_content_type("audio/mpeg")
+    |> send_file(status, path)
+  end
+
+  defp login?(conn) do
+    nil !=
+      conn
+      |> fetch_session()
+      |> get_session(:isLogin)
   end
 end
