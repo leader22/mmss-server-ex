@@ -5,22 +5,21 @@ defmodule MMSSServer.Server do
 
   use Plug.Router
 
-  import MMSSServer.Server.Plug, only: [put_secret_key_base: 2]
-
   alias MMSSServer.Server.Routes
   alias MMSSServer.Server.Routes.Authorized
   alias MMSSServer.Server.Error
   alias MMSSServer.Server.Util
 
-  # XXX: could not verify session cookie
-  plug(:put_secret_key_base)
+  plug(:match)
 
   plug(
     Plug.Session,
-    store: :cookie,
-    key: "mmss-server-sid",
-    signing_salt: "mmss-server"
+    store: :ets,
+    key: "sid",
+    table: :session
   )
+
+  plug(:fetch_session)
 
   plug(
     Plug.Parsers,
@@ -28,8 +27,14 @@ defmodule MMSSServer.Server do
     json_decoder: Poison
   )
 
-  plug(:match)
+  plug(:fetch_query_params)
+
   plug(:dispatch)
+
+  def init(opts) do
+    :ets.new(:session, [:named_table, :public])
+    opts
+  end
 
   # routes
   post "/login" do
@@ -63,9 +68,6 @@ defmodule MMSSServer.Server do
 
   @spec login?(Plug.Conn.t()) :: boolean
   defp login?(conn) do
-    nil !=
-      conn
-      |> fetch_session()
-      |> get_session(:isLogin)
+    nil != get_session(conn, :isLogin)
   end
 end

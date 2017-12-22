@@ -3,8 +3,6 @@ defmodule MMSSServer.Server.Routes.Authorized do
   Handlers for each route after login.
   """
 
-  import Plug.Conn
-
   alias MMSSServer.Server.Error
   alias MMSSServer.Server.Util
 
@@ -23,7 +21,7 @@ defmodule MMSSServer.Server.Routes.Authorized do
         Util.send_json(conn, 400, %{error: Error.err_invalid_params()})
 
       true ->
-        path = fetch_query_params(conn).params["path"]
+        path = conn.query_params["path"]
         mpath = Env.fetch!(:mmss_server_ex, :mpath)
         Util.send_mp3(conn, 200, "#{mpath}/#{path}")
     end
@@ -43,7 +41,7 @@ defmodule MMSSServer.Server.Routes.Authorized do
 
   @spec invalid_path?(Plug.Conn.t()) :: boolean
   defp invalid_path?(conn) do
-    path = fetch_query_params(conn).params["path"]
+    path = conn.query_params["path"]
     mpath = Env.fetch!(:mmss_server_ex, :mpath)
 
     case File.stat("#{mpath}/#{path}") do

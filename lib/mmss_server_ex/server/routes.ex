@@ -19,7 +19,6 @@ defmodule MMSSServer.Server.Routes do
 
       true ->
         conn
-        |> fetch_session()
         |> put_session(:isLogin, true)
         |> Util.send_json(200, nil)
     end
@@ -28,7 +27,6 @@ defmodule MMSSServer.Server.Routes do
   @spec post_logout(Plug.Conn.t()) :: Plug.Conn.t()
   def post_logout(conn) do
     conn
-    |> fetch_session()
     |> delete_session(:isLogin)
     |> Util.send_json(200, nil)
   end
