@@ -1,9 +1,9 @@
 defmodule MMSSServer.Server do
   use Plug.Router
-  import MMSSServer.Server.Plug, only: [putSecretKeyBase: 2]
+  import MMSSServer.Server.Plug, only: [put_secret_key_base: 2]
 
   # TODO: could not verify session cookie
-  plug(:putSecretKeyBase)
+  plug(:put_secret_key_base)
 
   plug(
     Plug.Session,
@@ -17,20 +17,20 @@ defmodule MMSSServer.Server do
 
   # routes
   post "/login" do
-    MMSSServer.Routes.postLogin(conn)
+    MMSSServer.Routes.post_login(conn)
   end
 
   post "/logout" do
-    MMSSServer.Routes.postLogout(conn)
+    MMSSServer.Routes.post_logout(conn)
   end
 
   # authorized routes
   get "/session" do
-    MMSSServer.Routes.Authorized.getSession(conn)
+    MMSSServer.Routes.Authorized.get_session(conn)
   end
 
   get "/track" do
-    MMSSServer.Routes.Authorized.getTrack(conn)
+    MMSSServer.Routes.Authorized.get_track(conn)
   end
 
   match _ do

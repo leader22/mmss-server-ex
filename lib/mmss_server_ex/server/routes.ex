@@ -1,7 +1,7 @@
 defmodule MMSSServer.Routes do
   import Plug.Conn
 
-  def postLogin(conn) do
+  def post_login(conn) do
     # TODO: parse body
     # TODO: check cred, bake session cookie
 
@@ -12,7 +12,7 @@ defmodule MMSSServer.Routes do
     |> send_resp(200, Poison.encode!(nil))
   end
 
-  def postLogout(conn) do
+  def post_logout(conn) do
     conn
     |> fetch_session()
     |> delete_session(:isLogin)
