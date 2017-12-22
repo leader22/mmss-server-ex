@@ -34,7 +34,12 @@ defmodule MMSSServer.Server do
   end
 
   match _ do
+    send_json(conn, 404, %{ error: 4 })
+  end
+
+  def send_json(conn, status, data) do
     conn
-    |> send_resp(404, "Oops!")
+    |> put_resp_content_type("application/json")
+    |> send_resp(status, Poison.encode!(data))
   end
 end

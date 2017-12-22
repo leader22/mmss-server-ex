@@ -3,32 +3,22 @@ defmodule MMSSServer.Routes.Authorized do
 
   def get_session(conn) do
     if !login?(conn) do
-      unauthorized(conn)
+      MMSSServer.Server.send_json(conn, 401, %{error: 3})
     end
 
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(200, Poison.encode!(nil))
+    MMSSServer.Server.send_json(conn, 200, nil)
   end
 
   def get_track(conn) do
     if !login?(conn) do
-      unauthorized(conn)
+      MMSSServer.Server.send_json(conn, 401, %{error: 3})
     end
 
     conn = fetch_query_params(conn)
     path = conn.params["path"]
     IO.inspect(path)
 
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(200, Poison.encode!(nil))
-  end
-
-  defp unauthorized(conn) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(401, Poison.encode!(%{error: 3}))
+    MMSSServer.Server.send_json(conn, 200, nil)
   end
 
   defp login?(conn) do
