@@ -9,8 +9,10 @@ MIX_ENV=prod mix run --no-halt
 # dev
 iex -S mix
 
-## fromat, lint and typecheck
+## format, lint and typecheck
 mix format
 mix credo --strict -a
 mix dialyzer
 ```
+
+Env variables are listed in `/config/config.exs`.
