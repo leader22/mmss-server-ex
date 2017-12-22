@@ -9,7 +9,8 @@ MIX_ENV=prod mix run --no-halt
 # dev
 iex -S mix
 
-## lint and typecheck
+## fromat, lint and typecheck
+mix format
 mix credo --strict -a
 mix dialyzer
 ```
