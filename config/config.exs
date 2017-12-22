@@ -1,9 +1,10 @@
 use Mix.Config
 
-secret_key_base = 64
-                  |> :crypto.strong_rand_bytes()
-                  |> Base.url_encode64()
-                  |> binary_part(0, 64)
+secret_key_base =
+  64
+  |> :crypto.strong_rand_bytes()
+  |> Base.url_encode64()
+  |> binary_part(0, 64)
 
 config(
   :mmss_server_ex,
